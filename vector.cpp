@@ -17,3 +17,12 @@ vec3 operator/(float f, const vec3& v) {
 vec3 operator*(float f, const vec3& v) {
   return vec3(f * v.x, f * v.y, f * v.z);
 }
+vec3 abs(vec3& v) {
+  return vec3(abs(v.x), abs(v.y), abs(v.z));
+}
+vec3 sign(vec3 v) {
+  return vec3(sgn(v.x), sgn(v.y), abs(v.z));
+}
+vec3 step(vec3 v1, vec3 v2) {
+  return vec3(v2.x < v1.x ? 0 : 1, v2.y < v1.y ? 0 : 1, v2.z < v1.z ? 0 : 1);
+}

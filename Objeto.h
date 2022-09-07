@@ -78,4 +78,35 @@ class Plano : public Objeto {
   std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
 };
 
+class Disk : public Objeto {
+  vec3 c, normal;
+  float r;
+
+ public:
+  Disk(const vec3& c, const vec3& normal, float r)
+      : c{c}, normal{normal}, r{r} {
+    this->color = vec3::green();
+    this->ks = 0.1;
+    this->kd = 0.9;
+    this->n = 32;
+    this->refractionIndex = 0;
+  }
+  std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
+};
+
+class Cilindro : public Objeto {
+  vec3 pa, pb;
+  float ra;
+
+ public:
+  Cilindro(const vec3& pa, const vec3& pb, float ra) : pa{pa}, pb{pb}, ra{ra} {
+    this->color = vec3::white();
+    this->ks = 0.9;
+    this->kd = 0.1;
+    this->n = 30;
+    this->refractionIndex = 0.4;
+  }
+  std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
+};
+
 #endif

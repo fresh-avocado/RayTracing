@@ -33,6 +33,14 @@ class vec3 {
     return vec3(x + v.x, y + v.y, z + v.z);
   }
 
+  vec3 abs() const {
+    return {
+        std::abs(x),
+        std::abs(y),
+        std::abs(z),
+    };
+  }
+
   vec3 operator-() const { return vec3(-x, -y, -z); }
 
   vec3 operator*(const vec3& v) const {
@@ -40,6 +48,7 @@ class vec3 {
   }
 
   vec3 operator*(float f) const { return vec3(x * f, y * f, z * f); }
+  vec3 operator/(float f) const { return vec3(x / f, y / f, z / f); }
 
   vec3 cruz(const vec3& v) const {
     return vec3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
@@ -74,7 +83,13 @@ class vec3 {
 };
 
 vec3 operator/(float f, const vec3& v);
-
 vec3 operator*(float f, const vec3& v);
+vec3 abs(const vec3& v);
+vec3 step(const vec3& v1, const vec3& v2);
+vec3 sign(const vec3& v);
+template <typename T>
+int sgn(const T& val) {
+  return (T(0) < val) - (val < T(0));
+}
 
 #endif  // INC_20222_RAYTRACING_VECTOR_H

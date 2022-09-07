@@ -15,6 +15,7 @@ void Camara::renderizar(const std::vector<Objeto*>& depthObjects,
       // TODO: explicación de la fórmula de 'dirección'?
       rayo.direccion =
           -f * ze + a * (y / h - 0.5) * ye + b * (x / w - 0.5) * xe;
+      rayo.direccion.normalize();
       vec3 color = calcularColor(rayo, depthObjects, lightSources, 1);
       paintPixel(x, y, color);
     }
