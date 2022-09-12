@@ -14,19 +14,4 @@ std::tuple<bool, float> Luz::interseccion(const Rayo& rayo) const {
   } else {
     return std::make_tuple(false, 0);
   }
-  // if (rayIntersects) {
-  //   return std::make_tuple(true, 1.0f);
-  // } else {
-  //   auto [secondRayIntersects, t, pI, N] = e2.interseccion(rayo);
-  //   if (secondRayIntersects) {
-  //     double distX = pI.x - this->centro.x;
-  //     double distY = pI.y - this->centro.y;
-  //     float dist = sqrt(distX * distX + distY * distY);
-  //     float normalizedDist = abs((dist - rI) / (rI - rE));
-  //     printf(" %f ", (1 - normalizedDist));
-  //     return std::make_tuple(true, (1 - normalizedDist));
-  //   } else {
-  //     return std::make_tuple(false, 0);
-  //   }
-  // }
 }
