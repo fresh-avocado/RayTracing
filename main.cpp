@@ -16,13 +16,13 @@ int main() {
 
   Mundo mundo(c);
 
-  // mundo.scene1();
+  mundo.scene1();
 
   // mundo.scene2();
 
   // mundo.scene3();
 
-  mundo.scene4();
+  // mundo.scene4();
 
   return 0;
 }

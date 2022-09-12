@@ -7,7 +7,6 @@ void Camara::renderizar(const std::vector<Objeto*>& depthObjects,
   CImgDisplay dis_img(*pImg, "Basic RayTracing");
   // Algoritmo de Ray Tracing
   Rayo rayo(eye);
-  Luz luz(vec3(10, 30, 20), vec3(1, 1, 1));
 
   // para cada pixel lanzar un rayo desde el ojo
   for (int y = 0; y < h; y++) {
@@ -16,7 +15,17 @@ void Camara::renderizar(const std::vector<Objeto*>& depthObjects,
       rayo.direccion =
           -f * ze + a * (y / h - 0.5) * ye + b * (x / w - 0.5) * xe;
       rayo.direccion.normalize();
-      vec3 color = calcularColor(rayo, depthObjects, lightSources, 1);
+      auto [intersectsLight, factor] = lightSources[0]->interseccion(rayo);
+      vec3 color;
+      if (intersectsLight) {
+        // color = lightSources[0]->color * factor;
+        color =
+            lightSources[0]->color * factor +
+            calcularColor(rayo, depthObjects, lightSources, 1) * (1 - factor);
+        ;
+      } else {
+        color = calcularColor(rayo, depthObjects, lightSources, 1);
+      }
       paintPixel(x, y, color);
     }
     dis_img.render(*pImg);
@@ -59,7 +68,7 @@ vec3 Camara::calcularColor(const Rayo& rayo,
     vec3 pInterseccion = rayo.origen + minT * rayo.direccion;
 
     // vector a la fuente de luz
-    vec3 L = luces[0]->origen - pInterseccion;
+    vec3 L = luces[0]->centro - pInterseccion;
     L.normalize();
 
     // componente de luz ambiente

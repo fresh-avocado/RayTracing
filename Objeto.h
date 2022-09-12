@@ -22,6 +22,7 @@ class Esfera : public Objeto {
  public:
   vec3 centro;
   float radio;
+  Esfera() = default;
   Esfera(const vec3& color, const vec3& centro, float radio)
       : centro{centro}, radio{radio} {
     this->color = color;
@@ -101,11 +102,17 @@ class Cilindro : public Objeto {
  public:
   Cilindro(const vec3& pa, const vec3& pb, float ra) : pa{pa}, pb{pb}, ra{ra} {
     this->color = vec3::white();
-    this->ks = 0.9;
-    this->kd = 0.1;
+    this->ks = 0.1;
+    this->kd = 0.9;
     this->n = 30;
-    this->refractionIndex = 0.4;
+    this->refractionIndex = 1;
   }
+  std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
+};
+
+class Luciernaga : public Objeto {
+ public:
+  Luciernaga() {}
   std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
 };
 
