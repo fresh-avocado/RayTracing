@@ -18,7 +18,6 @@ void Camara::renderizar(const std::vector<Objeto*>& depthObjects,
       auto [intersectsLight, factor] = lightSources[0]->interseccion(rayo);
       vec3 color;
       if (intersectsLight) {
-        // color = lightSources[0]->color * factor;
         color =
             lightSources[0]->color * factor +
             calcularColor(rayo, depthObjects, lightSources, 1) * (1 - factor);

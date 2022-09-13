@@ -11,7 +11,7 @@ class Luz {
   Esfera esfera;
   float radio;
   Luz() = delete;
-  Luz(const vec3& centro, const vec3& color, float radio, float rE)
+  Luz(const vec3& centro, const vec3& color, float radio)
       : centro{centro}, color{color}, radio{radio} {
     esfera = Esfera(this->color, this->centro, this->radio, 0, 0, 0);
   }

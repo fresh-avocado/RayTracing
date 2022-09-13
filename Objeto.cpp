@@ -75,6 +75,7 @@ float sign(float t) {
 
 std::tuple<bool, float, vec3, vec3> Cilindro::interseccion(
     const Rayo& rayo) const {
+  // TODO: tomar en cuenta interseccion desde adentro
   vec3 ro = rayo.origen;
   vec3 rd = rayo.direccion;
   vec3 ca = pb - pa;
