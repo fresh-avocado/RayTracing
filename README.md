@@ -1,6 +1,6 @@
 # Build & Run
 
 ```bash
-make
-./a.out
+make -j # para que compile en paralelo
+./a.out # correr el binario
 ```
