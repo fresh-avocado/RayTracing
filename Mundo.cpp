@@ -38,7 +38,7 @@ void Mundo::scene1() {
 
   addObj(new Plano(vec3::blue(), vec3(0, 1, 0), 2, 0.7, 0, 0));
 
-  // addObj(new Esfera(vec3::red(), vec3(-5, 7, -10), 2, 0.9, 0.1, 32));
+  addObj(new Esfera(vec3::red(), vec3(-5, 7, -10), 2, 0.9, 0.1, 32));
   addLightSource(new Luz(vec3(3, 17, 10), vec3::white(), 1.5));
 
   camara.renderizar(depthObjects, lightSources);
@@ -77,14 +77,14 @@ void Mundo::scene4() {
   addObj(new Cilindro(vec3(0, -4, 10), vec3(0, 8, 10), 7));
   addObj(new Cilindro(vec3(0, -4, 10), vec3(0, 8, 10), 6.5));
   // addObj(new Esfera(vec3::yellow(), vec3(0, 1, 10), 0.5, 0.9, 0.1, 30));
-  addObj(new Esfera(vec3::yellow(), vec3(3, 17, 5), 2, 0.9, 0.1, 30));
+  // addObj(new Esfera(vec3::yellow(), vec3(3, 14, 5), 2, 0.9, 0.1, 30));
 
   // addObj(new Esfera(vec3::yellow(), vec3(3, 5, 10), 0.5, 0.9, 0.1, 30));
   // addObj(new Esfera(vec3::yellow(), vec3(-3, 5, 10), 0.5, 0.9, 0.1, 30));
   // addObj(new Esfera(vec3::white(), vec3(-14, 5, 10), 3, 0.9, 0.9, 30, 1));
 
-  addLightSource(new Luz(vec3(3, 17, 15), vec3::white(), 1.5));
-  // addLightSource(new Luz(vec3(0, 1, 10), vec3::yellow(), 1.5));
+  addLightSource(new Luz(vec3(3, 16, 15), vec3(1, 1, 0.3), 1.5));
+  addLightSource(new Luz(vec3(0, 1, 10), vec3(1, 1, 0.3), 1.5));
 
   camara.renderizar(depthObjects, lightSources);
 }

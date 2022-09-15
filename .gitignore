@@ -34,3 +34,6 @@ CMakeLists.txt
 
 # VSCode
 .vscode/
+
+# object files
+o
