@@ -1,5 +1,6 @@
 CPP = g++
-CPPFLAGS = -std=c++20 -Wall -Wpedantic -Wextra -Wshadow -I /opt/X11/include -L /opt/X11/lib -lX11 -ljpeg -lpng -lz -Xpreprocessor -fopenmp -lomp
+OMPFLAGS = -Xpreprocessor -fopenmp -lomp
+CPPFLAGS = -std=c++20 -Wall -Wpedantic -Wextra -Wshadow -I /opt/X11/include -L /opt/X11/lib -lX11 -ljpeg -lpng -lz $(OMPFLAGS)
 # TODO: poner paths si lo organizo en carpetas
 # VPATH = ./src:./src/avl:./src/utils:./tests
 

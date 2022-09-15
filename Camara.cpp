@@ -162,7 +162,7 @@ vec3 Camara::calcularColor(const Rayo& rayo,
       i++;
     }
     vec3 sum;
-    for (auto colore : colores) {
+    for (auto& colore : colores) {
       sum = sum + colore;
     }
     color = sum / luces.size();
