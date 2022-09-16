@@ -11,7 +11,7 @@
 class Objeto {
  public:
   vec3 color;
-  float ks, kd, n, refractionIndex;
+  float ks, kd, kr, n, refractionIndex;
   // { inter, distInter, ptInter, normalPtInter }
   virtual std::tuple<bool, float, vec3, vec3> interseccion(
       const Rayo& rayo) const = 0;
@@ -46,13 +46,15 @@ class Esfera : public Objeto {
          float kd,
          float ks,
          float n,
-         float refractionIndex)
+         float refractionIndex,
+         float kr)
       : centro{centro}, radio{radio} {
     this->color = color;
     this->kd = kd;
     this->ks = ks;
     this->n = n;
     this->refractionIndex = refractionIndex;
+    this->kr = kr;
   }
   std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
 };
@@ -106,6 +108,7 @@ class Cilindro : public Objeto {
     this->kd = 0.9;
     this->n = 30;
     this->refractionIndex = 1;
+    this->kr = 0.1;  // FIXME: quizas cambiar
   }
   std::tuple<bool, float, vec3, vec3> interseccion(const Rayo& rayo) const;
 };

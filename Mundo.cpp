@@ -49,7 +49,7 @@ void Mundo::scene2() {
   // addObj(new Esfera(vec3::blue(), vec3::origin(), 4, 0.9, 0.1, 32, 1));
 
   // addObj(new Esfera(vec3::yellow(), vec3(-5, 7, 5), 2, 0.9, 0.1, 32));
-  addObj(new Esfera(vec3::red(), vec3(0, 7, 0), 4, 0.9, 0.1, 32, 1));
+  addObj(new Esfera(vec3::red(), vec3(0, 7, 0), 4, 0.9, 0.1, 32, 1, 0.1));
   // addObj(new Esfera(vec3::yellow(), vec3(5, 5, 1), 2, 0.9, 0.1, 32));
 
   addObj(new Plano(vec3(0.4, 0.5, 0.2), vec3(0, 1, 0), 2, 0.7, 0, 0));
@@ -77,8 +77,10 @@ void Mundo::scene4() {
 
   addObj(new Cilindro(vec3(0, -4, 10), vec3(0, 8, 10), 7));
   addObj(new Cilindro(vec3(0, -4, 10), vec3(0, 8, 10), 6.5));
+  addObj(new Esfera(vec3::red(), vec3(12, 2, 15), 2, 0.1, 0.1, 2, 0, 0));
 
   addLightSource(new Luz(vec3(0, 1, 10), vec3(1, 1, 0.3), 1.5));
+  // addLightSource(new Luz(vec3(10, 15, 10), vec3::white(), 1.5));
 
   camara.renderizar(depthObjects, lightSources);
 }

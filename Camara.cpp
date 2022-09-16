@@ -48,7 +48,7 @@ vec3 Camara::calcularColor(const Rayo& rayo,
                            int prof) {
   vec3 color = vec3::black();
   // FIXME: con `prof > 7` muere: significa que se queda rebotanod mucho
-  if (prof > 3) {
+  if (prof > 5) {
     return color;
   }
   float minT = std::numeric_limits<float>::max();
@@ -73,47 +73,53 @@ vec3 Camara::calcularColor(const Rayo& rayo,
     // TODO: iterar sobre todas las fuentes de luz
     // punto de intersección
     vec3 pInterseccion = rayo.origen + minT * rayo.direccion;
-    vec3 colores[luces.size()];
-    int i = 0;
+    // vec3 colores[luces.size()];
+    // componente de luz ambiente
+    vec3 componenteAmbiente = vec3(0.1, 0.1, 0.1) * objInterseccionado->kd;
+    vec3 componenteDifusa, componenteEspecular;
+    vec3 v = -rayo.direccion;
+    v.normalize();
 
     for (auto luz : luces) {
       // vector a la fuente de luz
       vec3 L = luz->centro - pInterseccion;
+      float longitudLuz = L.modulo();
       L.normalize();
 
-      // componente de luz ambiente
-      vec3 componenteAmbiente = vec3(0.1, 0.1, 0.1) * objInterseccionado->kd;
-
       // calculo de sombra
-
-      // TODO: por qué 0.01?
       Rayo sombra(pInterseccion + N * 0.01, L);
-
       bool shadow = false;
-      vec3 v = -rayo.direccion;
-      v.normalize();
 
       for (auto obj : objetos) {
         auto [rayIntersects, distanciaAlPuntoDeInterseccion,
               puntoDeInterseccion, normalAlPuntoDeInterseccion] =
             obj->interseccion(sombra);
         if (rayIntersects) {
-          // TODO: continue
-          if (!(obj->refractionIndex > 0.0f)) {
+          if (obj->refractionIndex == 0.0f &&
+              distanciaAlPuntoDeInterseccion <= longitudLuz) {
             shadow = true;
+            break;
           }
-          break;
         }
       }
 
-      vec3 componenteDifusa, componenteEspecular;
       if (!shadow) {
         // componente difusa
         float factorDifuso = N.punto(L);
-
         if (factorDifuso > 0.0f) {
           componenteDifusa = luz->color * objInterseccionado->kd * factorDifuso;
         }
+
+        // componente difuso si es transparente
+        if (objInterseccionado->refractionIndex > 0.0f) {
+          factorDifuso = (-N).punto(L);
+          if (factorDifuso > 0.0f) {
+            componenteDifusa = componenteDifusa + luz->color *
+                                                      objInterseccionado->kd *
+                                                      factorDifuso;
+          }
+        }
+
         // componente especular
         vec3 r = 2 * ((L.punto(N)) * N) - L;
         r.normalize();
@@ -122,51 +128,62 @@ vec3 Camara::calcularColor(const Rayo& rayo,
           componenteEspecular = luz->color * objInterseccionado->ks *
                                 pow(factorEspecular, objInterseccionado->n);
         }
-        vec3 colorReflexivo, colorRefractivo;
-        float kr = objInterseccionado->ks;
-        float kt = 0;
-        bool outside = rayo.direccion.punto(N) < 0;
-        vec3 bias = 0.001 * N;
 
         if (objInterseccionado->refractionIndex > 0.0f) {
-          kr = fresnel(rayo.direccion, N, objInterseccionado->refractionIndex);
-          if (kr < 1) {
-            kt = 1 - kr;
-            Rayo rayoRefractivo(
-                outside ? pInterseccion - bias : pInterseccion + bias,
-                refractar(rayo.direccion, N,
-                          objInterseccionado->refractionIndex));
-            rayoRefractivo.direccion.normalize();
-            colorRefractivo =
-                calcularColor(rayoRefractivo, objetos, luces, prof + 1);
+          r = 2 * (L.punto(-N)) * (-N) - L;
+          r.normalize();
+          factorEspecular = r.punto(v);
+          if (factorEspecular > 0.0f) {
+            componenteEspecular =
+                componenteEspecular +
+                luz->color * objInterseccionado->ks *
+                    pow(factorEspecular, objInterseccionado->n);
           }
         }
-
-        if (kr > 0.0f) {
-          Rayo rayo_reflexivo(
-              outside ? pInterseccion - bias : pInterseccion + bias,
-              2 * (v.punto(N)) * N - v);
-          rayo_reflexivo.direccion.normalize();
-          colorReflexivo =
-              calcularColor(rayo_reflexivo, objetos, luces, prof + 1);
-        }
-        colores[i] =
-            objInterseccionado->color *
-            (componenteAmbiente + componenteDifusa + componenteEspecular);
-        colores[i] = colores[i] + colorReflexivo * kr + colorRefractivo * kt;
-        colores[i].maxToOne();
       } else {
-        colores[i] = objInterseccionado->color * componenteAmbiente;
-        colores[i].maxToOne();
+        // TODO: está en sombra
       }
-      i++;
+      float kr = objInterseccionado->ks;
+      float kt = 0;
+      bool outside = rayo.direccion.punto(N) < 0;
+      vec3 bias = 0.001f * N;
+      vec3 colorReflexivo, colorRefractivo;
+
+      if (objInterseccionado->refractionIndex > 0.0f) {
+        kr = fresnel(rayo.direccion, N, objInterseccionado->refractionIndex);
+        if (kr < 1) {
+          kt = 1 - kr;
+          Rayo rayoRefractivo(
+              outside ? pInterseccion - bias : pInterseccion + bias,
+              refractar(rayo.direccion, N,
+                        objInterseccionado->refractionIndex));
+          rayoRefractivo.direccion.normalize();
+          colorRefractivo =
+              calcularColor(rayoRefractivo, objetos, luces, prof + 1);
+        }
+      }
+
+      if (kr > 0.0f) {
+        Rayo rayoReflexivo(
+            outside ? pInterseccion - bias : pInterseccion + bias,
+            2 * (v.punto(N)) * N - v);
+        rayoReflexivo.direccion.normalize();
+        colorReflexivo = calcularColor(rayoReflexivo, objetos, luces, prof + 1);
+      }
+      color = color +
+              objInterseccionado->color *
+                  (componenteAmbiente + componenteDifusa + componenteEspecular);
+      color = color + colorReflexivo * kr + colorRefractivo * kt;
+      color.maxToOne();
     }
-    vec3 sum;
-    for (auto& colore : colores) {
-      sum = sum + colore;
-    }
-    color = sum / luces.size();
-    sum.maxToOne();
+
+    // TODO: quizás necesite lo de abajo
+    // vec3 sum;
+    // for (auto& colore : colores) {
+    //   sum = sum + colore;
+    // }
+    // color = sum / luces.size();
+    // sum.maxToOne();
   }
   return color;
 }
